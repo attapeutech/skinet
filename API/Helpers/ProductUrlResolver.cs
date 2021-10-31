@@ -11,18 +11,15 @@ namespace API.Helpers
         public ProductUrlResolver(IConfiguration config)
         {
             _config = config;
-
         }
-        public string Resolve(Product source, ProductToReturnDto destination, string destMember,
-        ResolutionContext context)
+
+        public string Resolve(Product source, ProductToReturnDto destination, string destMember, ResolutionContext context)
         {
             if(!string.IsNullOrEmpty(source.PictureUrl))
             {
-                //This will give a full path
                 return _config["ApiUrl"] + source.PictureUrl;
             }
 
-            //if string is empty then return null
             return null;
         }
     }

@@ -1,13 +1,13 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using Infrastructure.Data;
-using AutoMapper;
+using API.Extensions;
 using API.Helpers;
 using API.Middleware;
-using API.Extensions;
+using AutoMapper;
+using Infrastructure.Data;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace API
 {
@@ -17,43 +17,44 @@ namespace API
         public Startup(IConfiguration config)
         {
             _config = config;
-         
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddControllers();
+            services.AddDbContext<StoreContext>(x =>
+                x.UseSqlite(_config.GetConnectionString("DefaultConnection")));
 
-            services.AddDbContext<StoreContext>(x => x.UseSqlite(_config.GetConnectionString("DefaultConnection")));
-
-            //This is coming from ApplicationServicesExtensions
             services.AddApplicationServices();
             services.AddSwaggerDocumentation();
-            
-
+            services.AddCors(opt => 
+            {
+                opt.AddPolicy("CorsPolicy", policy => 
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:44378");
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //Using our custom error handling Middleware
             app.UseMiddleware<ExceptionMiddleware>();
-
-            
             app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            //Handling Image file
             app.UseStaticFiles();
+
+            app.UseCors("CorsPolicy");
 
             app.UseAuthorization();
 
-            app.UseSwaggerDocumentation();
+            app.UseSwaggerDocumention();
 
             app.UseEndpoints(endpoints =>
             {
