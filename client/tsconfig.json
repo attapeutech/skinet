@@ -18,6 +18,8 @@
     ]
   },
   "angularCompilerOptions": {
+    //"strictDomEventTypes: false", //I added this line just incase 
+    //typescript started acting up.
     "enableI18nLegacyMessageIdFormat": false
   }
 }
