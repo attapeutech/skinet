@@ -1,5 +1,6 @@
 using API.Errors;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -30,7 +31,15 @@ namespace API.Controllers
         {
             var thing = _context.Products.Find(42);
 
-            var thingToReturn = thing.ToString();
+            if(thing != null)
+            {
+                var thingToReturn = thing.ToString();
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse(500));
+               
+            }
 
             return Ok();
         }
