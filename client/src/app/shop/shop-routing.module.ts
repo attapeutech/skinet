@@ -10,7 +10,9 @@ const routes: Routes = [
   //Root component for shop module
   {path: '', component: ShopComponent},
   //for product details
-  {path: ':id', component: ProductDetailsComponent},
+  {path: ':id', component: ProductDetailsComponent,
+    data: {breadcrumb: {alias: 'productDetails'}}
+  },
 ];
 
 @NgModule({

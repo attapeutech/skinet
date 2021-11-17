@@ -14,7 +14,8 @@ import { LEADING_TRIVIA_CHARS } from '@angular/compiler/src/render3/view/templat
 })
 export class ShopComponent implements OnInit {
   //For search 
-  @ViewChild('search', {static: true}) searchTerm: ElementRef;
+  //To resolve search after hit enter, turn static to false
+  @ViewChild('search', {static: false}) searchTerm: ElementRef;
   //add prop of products
   products: IProduct[];
   brands: IBrand[];
